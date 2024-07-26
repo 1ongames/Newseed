@@ -371,11 +371,15 @@ router.all(/^\/aclgroup$/, async(req, res) => {
 		if(!['ip', 'username'].includes(mode) || !username || !expire || note == undefined) 
 			{ content = (error = err('alert', { code: 'invalid_value' })) + content; break; }
 
-		if(mode == 'ip' && !username.includes('/')) username += '/32';
-		
-		if(mode == 'ip' && !username.match(/^([01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5])[.]([01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5])[.]([01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5])[.]([01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\/([0-9]|[12][0-9]|3[0-2])$/))
-		else if(mode == 'ip' && !username.match("\\A((?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4})*)?) ::((?:[0-9A-Fa-f]{1,4}:)*)(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\z"))
-			{ content = (error = err('alert', { code: 'invalid_cidr' })) + content; break; }
+		if (mode == 'ip' && !username.includes('/')) username += '/32';
+
+		const ipv4Regex = /^([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])\/([0-9]|[12]\d|3[0-2])$/;
+		const ipv6Regex = /^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}(\/([0-9]|[1-9][0-9]|1[01][0-9]|12[0-8]))?$/;
+
+		if (mode == 'ip' && (!username.match(ipv4Regex) && !username.match(ipv6Regex))) {
+		    content = (error = err('alert', { code: 'invalid_cidr' })) + content;
+			break;
+			}
 		
 		var data = await curs.execute("select username from users where lower(username) = ?", [username.toLowerCase()]);
 		if(!data.length && mode != 'ip') { content = (error = err('alert', { code: 'invalid_username' })) + content; break; }
