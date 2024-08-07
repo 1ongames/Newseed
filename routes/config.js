@@ -246,7 +246,7 @@ router.all(/^\/admin\/config$/, async(req, res, next) => {
 			if(req.body['etc_name'] != 'update_code') {
 				if(req.body['etc_value'] == undefined) {
 					if(req.body['etc_name'] == 'wiki.site_name')
-						updateSiteName('더 시드');
+						updateSiteName('New seed');
 					delete wikiconfig[req.body['etc_name']];
 					await curs.execute("delete from config where key = ?", [req.body['etc_name']]);
 				} else {
@@ -292,5 +292,5 @@ router.all(/^\/admin\/config$/, async(req, res, next) => {
 		return res.redirect('/admin/config');
 	}
 	
-	return res.send(await render(req, '환경설정', content));
+	return res.send(await render(req, '위키 기본설정', content));
 });
