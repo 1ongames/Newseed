@@ -134,6 +134,7 @@ router.all(/^\/admin\/config$/, async(req, res, next) => {
 					${tsver('4.22.5')}
 					${tsver('4.22.7')}
 					${tsver('4.22.9')}
+     					${tsver('4.25.0')}
 				</select>
 				<p id=theseedVersionDescription></p>
 				<p>이 설정 변경 시 반드시 엔진을 즉시 다시 시작해야 합니다.</p>
@@ -217,7 +218,7 @@ router.all(/^\/admin\/config$/, async(req, res, next) => {
 				<TD>${html.escape(si)}</TD>
 				<TD>${html.escape(wikiconfig[si])}</TD>
 				<td class=text-center>
-					<form method=post onsubmit="return confirm('정말로?');">
+					<form method=post onsubmit="return confirm('초기화 하시겠습니까?');">
 						<input type=hidden name=etc_name value="${html.escape(si)}" />
 						<input type=submit class="btn btn-sm btn-danger" value="초기화" />
 					</form>
