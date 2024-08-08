@@ -9,7 +9,10 @@ router.all(/^\/member\/signup$/, async function signupEmailScreen(req, res, next
 	/* 약관 추가 예정
         var terms = '';
 	if(config.getString('wiki.terms_enabled', '1') == '1' || config.getString('wiki.trems_enabled', '1') == 'true') {
-		terms = ` */
+        if(config.getString('wiki.terms', '') == '' ) {
+	        terms = `여기에 약관을 입력해주세요.`
+        else {
+	      terms = `*/
 	// 이메일 필터
 	var emailfilter = '';
 	if(config.getString('wiki.email_filter_enabled', '0') == '1' || config.getString('wiki.email_filter_enabled', '0') == 'true') {
