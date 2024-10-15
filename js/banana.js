@@ -223,4 +223,3 @@ window.discussPollStart = discussPollStart;
 setTimeout(() => window.discussPollStart = discussPollStart, 1);
 setTimeout(() => window.discussPollStart = discussPollStart, 2);
 setTimeout(() => window.discussPollStart = discussPollStart, 3);
-
