@@ -3,12 +3,12 @@ router.get(/^\/License$/, async (req, res) => {
     
     function generateLicepage() {
         let pageContent = `<h2>New seed</h2>
-                            <p><b>New seed version</b>: <b>V1.7.0 Part 1</b></p>
+                            <p><b>New seed version</b>: <b>V2.0.0</b></p>
                             <ul>
                                 <li>namumark: q7d1q4o</li>
                                 <li>engine: 6hps3f5</li>
                                 <li>skins: 8souaic</li>
-                                <li>last update: 2024-08-27 PM 6:39 KST</li>
+                                <li>last update: 1970-01-01 00:00 KST</li>
                             </ul>
                             `;
         pageContent += `
