@@ -1,49 +1,40 @@
-router.get(/^\/License$/, async(req, res) => {
-	var licepage = `
-		<p>imitated-seed</p>
-		<p>(the seed v${version.major}.${version.minor}.${version.revision})</p>
-	`;
-	
-	if(hostconfig.replicate_theseed_license) {
-		licepage = '';
-		if(ver('4.11.1')) {
-			licepage += `<h2>the seed</h2><p>v${version.major}.${version.minor}.${version.revision}</p>`;
-		} else {
-			licepage += `<h2>the seed (v${version.major}.${version.minor}.${version.revision})</h2>`;
-		}
-		licepage += `
-			<p>Copyright <a href="https://theseed.io/">theseed.io</a> all rights reserved.</p>
-			
-			<h3>Contributors</h3>
-			<ul class=wiki-list>
-				${
-					ver('4.13.0') ? `
-						<li>namu@theseed.io (backend & frontend)</li>
-						<li>PPPP@theseed.io (old frontend)</li>
-						<li>kasio@theseed.io (old render)</li>
-					` : `
-						<li>namu@theseed.io (backend)</li>
-						<li>PPPP@theseed.io (frontend)</li>
-						<li>kasio@theseed.io (old render)</li>
-					`
-				}
-			</ul>
-			
-			<h3>Open source license</h3>
-			<ul class=wiki-list>
-				<li>
-					<a href="https://github.com/Khan/KaTeX">KaTex</a><br>
-					Author : <a href="https://github.com/Khan">Khan Academy</a><br />
-					KaTeX is licensed under the <a rel="license" href="https://github.com/Khan/KaTeX/blob/master/LICENSE.txt">MIT license</a>.
-				</li>
-				<li>
-					<a href="https://paularmstrong.github.io/swig/">Swig</a><br />
-					Author : <a href="https://github.com/paularmstrong">Paul Armstrong</a><br />
-					Swig is licensed under the <a rel="license" href="https://github.com/paularmstrong/swig/blob/master/LICENSE">MIT license</a>.
-				</li>
-				
-				${ver('4.13.0') ? `
-					<li><pre>/*!
+router.get(/^\/License$/, async (req, res) => {
+    let licepage = '';
+    
+    function generateLicepage() {
+        let pageContent = `<h2>New seed</h2>
+                            <p><b>New seed version</b>: <b>V1.7.0 Part 1</b></p>
+                            <ul>
+                                <li>namumark: q7d1q4o</li>
+                                <li>engine: 6hps3f5</li>
+                                <li>skins: 8souaic</li>
+                                <li>last update: 2024-08-27 PM 6:39 KST</li>
+                            </ul>
+                            `;
+        pageContent += `
+            <b><p>Copyright <a href="https://newseed.xyz">newseed.xyz</a> all rights reserved.</p></b>
+            
+                    <ul>
+                        <li>iongames@newseed.xyz (developments)</li>
+                        <li>stoserver@newseed.xyz (domain)</li>
+                    </ul>
+
+            <h3>Open source license</h3>
+            <ul class="wiki-list">
+                <li>
+                    <a href="https://github.com/Khan/KaTeX">KaTex</a><br>
+                    Author: <a href="https://github.com/Khan">Khan Academy</a><br />
+                    KaTeX is licensed under the <a rel="license" href="https://github.com/Khan/KaTeX/blob/master/LICENSE.txt">MIT license</a>.
+                </li>
+                <li>
+                    <a href="https://paularmstrong.github.io/swig/">Swig</a><br />
+                    Author: <a href="https://github.com/paularmstrong">Paul Armstrong</a><br />
+                    Swig is licensed under the <a rel="license" href="https://github.com/paularmstrong/swig/blob/master/LICENSE">MIT license</a>.
+                </li>
+                
+                ${
+                    ver('4.13.0') ? `
+                    <li><pre>/*!
  * nano-assign v1.0.1
  * (c) 2018-present egoist &lt;0x142857@gmail.com&gt;
  * Released under the MIT License.
@@ -100,8 +91,8 @@ router.get(/^\/License$/, async(req, res) => {
 
 /**!
  * Sortable 1.10.1
- * @author	RubaXa   &lt;trash@rubaxa.org&gt;
- * @author	owenm    &lt;owen23355@gmail.com&gt;
+ * @author    RubaXa   &lt;trash@rubaxa.org&gt;
+ * @author    owenm    &lt;owen23355@gmail.com&gt;
  * @license MIT
  */
 /*!---------------------------------------------------------------------------------------------
@@ -122,17 +113,21 @@ See the Apache Version 2.0 License for specific language governing permissions
 and limitations under the License.
 ***************************************************************************** */
 </pre></li>
-				` : ''}
-			</ul>
-		`;
-	}
-	
-	if(!ver('4.13.0')) {
-		licepage += await readFile('./skins/' + getSkin(req) + '/license.html')
-	}
-	
-	return res.send(await render(req, '라이선스', `
-		<div class=wiki-content>
-			${licepage}
-	` + '</div>', {}, _, _, 'license'));
+                ` : ''}
+            </ul>
+        `;
+        return pageContent;
+    }
+    
+    licepage = generateLicepage();
+    
+    if (!ver('4.13.0')) {
+        licepage += await readFile('./skins/' + getSkin(req) + '/license.html');
+    }
+    
+    return res.send(await render(req, '라이선스', `
+        <div class="wiki-content">
+            ${licepage}
+        </div>
+    `, {}, _, _, 'license'));
 });
