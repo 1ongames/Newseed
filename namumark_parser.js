@@ -514,6 +514,62 @@ module.exports = async function markdown(req, content, discussion = 0, title = '
 	
 	data = html.escape(data);
 	const xref = flags.includes('backlinkinit');
+
+	// ruby 문법
+	function ruby(data) {
+    		const rubyPattern = /\[ruby\(([^,]+),\s*ruby=([^\)]+)\)\]/g;
+		
+    		return data.replace(rubyPattern, (match, kanji, furigana) => {
+        	return `<ruby>${kanji}<rp>(</rp><rt>${furigana}</rt><rp>)</rp></ruby>`;
+    		});
+	}
+
+	// dday 문법
+	function dday(data) {
+    		// 정규식
+    		const regex = /\[dday\((\d{4})-(\d{2})-(\d{2})\)\]/;
+    		const match = data.match(regex);
+
+    		// 정규식이랑 다르면 뱉기
+    		if (!match) return 'invalid date';
+
+    		// 년, 월, 일을 가져옴
+    		const year = parseInt(match[1]);
+    		const month = parseInt(match[2]) - 1;  // 월은 0부터 시작하므로 -1
+    		const day = parseInt(match[3]);
+
+    		// 나무위키 참고, 0100-01-01부터 9999-12-31까지
+    		if (year < 100 || year > 9999 || month < 0 || month > 11 || day < 1 || day > 31) {
+        		return 'invalid date';
+    		}
+
+    		// 날짜 변수
+    		const ddayDate = new Date(year, month, day);
+    
+    		// 날짜가 유효한지 확인 (2024-02-30 같이 없는날)
+    		if (isNaN(ddayDate.getTime())) {
+        		return 'invalid date';
+    		}
+		// TODO: 시간 -> 밀리초 -> 날짜 변환 말고 다른 방법으로 바꾸기
+    		// 오늘 날짜 객체 생성
+    		const today = new Date();
+    		today.setHours(0, 0, 0, 0);  // 시간을 00:00:00으로 설정
+
+    		// 밀리초로 계산
+    		const timeDiff = ddayDate.getTime() - today.getTime();
+    
+    		// 일 단위로 변환
+    		const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+    		// 결과 뱉기
+    		if (dayDiff > 0) {
+        		return `-${dayDiff}`;
+    		} else if (dayDiff < 0) {
+        		return `+${Math.abs(dayDiff)}`;
+    		} else {
+		        return '-0';
+    		}
+	}
 	
 	// 역링크 초기화
 	if(xref)
